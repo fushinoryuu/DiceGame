@@ -6,13 +6,14 @@ import pygame
 from pygame.locals import *
 from graphic_die_class import GraphicDie
 from button_class import SimpleButton
+from game_rules_class import GameRules
 
 
 class GraphicDieInterface:
 
     def __init__(self):
         pygame.init()
-        #Sets the size of the screen and the dice that will be used.
+
         self.number_of_dice = 7
 
         self.display_width = 640
@@ -56,7 +57,39 @@ class GraphicDieInterface:
         self.b3 = SimpleButton(b_width, b_height, self.orange, self.grey, "Third Roll", self.display_surface, b_position)
         self.b4 = SimpleButton(b_width, b_height, self.orange, self.grey, "Last Roll", self.display_surface, b_position)
         self.b5 = SimpleButton(b_width, b_height, self.orange, self.grey, "Play Again", self.display_surface, b_position)
+        self.buttons_list = [self.b1, self.b2, self.b3, self.b4, self.b5]
 
+        self.game_font = pygame.font.SysFont("Broadway", 128)
+        self.instructions_text = "Click on Dice -- Red to Roll, White to Hold"
+        self.title_surface = self.game_font.render("Dice Game", True, self.dark_turquoise, None)
+        self.instruction_surface = self.game_font.render(self.instructions_text, True, self.lite_turquoise, None)
+        self.instruction_surface = pygame.transform.scale(self.instruction_surface, (self.display_width - (self.display_width//5), self.display_width//20))
+
+        self.game_rules = GameRules()
+        self.score_active = False
+        self.instruction_active = False
+
+    def all_dice_active(self):
+        for i in self.die_object_list:
+            i.ACTIVE = True
+
+    def all_dice_inactive(self):
+        for i in self.die_object_list:
+            i.ACTIVE = False
+
+    def all_dice_hold(self):
+        for i in self.die_object_list:
+            i.HOLD = True
+
+    def all_dice_roll(self):
+        for i in self.die_object_list:
+            i.HOLD = False
+
+    def set_value(self):
+        """Sets all not HOLD Die to a new random value."""
+        for x in self.die_object_list:
+            if not x.HOLD:
+                x.set_random_value()
 
     def fill_gradient(self, surface, color, gradient, rect=None, vertical=True, forward=True):
         """fill a surface with a gradient pattern
