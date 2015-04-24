@@ -1,6 +1,6 @@
 # graphic_die_interface.py
 # Christian Munoz
-# 03/13/2015
+# 04/24/2015
 
 import pygame
 from pygame.locals import *
@@ -60,7 +60,7 @@ class GraphicDieInterface:
         self.b5 = SimpleButton(b_width, b_height, self.orange, self.grey, "Play Again", self.display_surface, b_position)
         self.buttons_list = [self.b1, self.b2, self.b3, self.b4, self.b5]
 
-        self.game_font = pygame.font.SysFont("Broadway", 128)
+        self.game_font = pygame.font.SysFont("Broadway", 80)
         self.instructions_text = "Click on Dice -- Red to Roll, White to Hold"
         self.title_surface = self.game_font.render("Dice Game", True, self.dark_turquoise, None)
         self.instruction_surface = self.game_font.render(self.instructions_text, True, self.lite_turquoise, None)
@@ -106,6 +106,9 @@ class GraphicDieInterface:
     def add_points(self):
         self.score_tuple = self.game_rules.score_dice(self.die_object_list)
         self.game_rules.points += self.score_tuple[1]
+
+    def change_points(self, change):
+        self.game_rules.points += change
 
     def display_score(self):
         if self.score_active:

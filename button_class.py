@@ -9,6 +9,7 @@ class SimpleButton:
 
         # Define and assign some self values.
         self.active = True
+        self.highlighted = False
         self.label = label
         self.surface = surface
         self.position = position
@@ -36,13 +37,9 @@ class SimpleButton:
         """Helper Method to create button background"""
 
         # create square with rounded corners
-        pygame.draw.circle(self.button_surface, color, (self.radius, self.radius),
-                           self.radius)
-        pygame.draw.circle(self.button_surface, color,
-                           (self.width - self.radius, self.radius), self.radius)
-        pygame.draw.rect(self.button_surface, color,
-                         Rect((self.radius, 0), (self.width - 2 * self.radius,
-                                                 self.height)))
+        pygame.draw.circle(self.button_surface, color, (self.radius, self.radius), self.radius)
+        pygame.draw.circle(self.button_surface, color, (self.width - self.radius, self.radius), self.radius)
+        pygame.draw.rect(self.button_surface, color, Rect((self.radius, 0), (self.width - 2 * self.radius, self.height)))
 
     def button_text(self):
         """Helper function to make text surface and blit on button_surface."""
@@ -60,11 +57,11 @@ class SimpleButton:
         self.button_surface.blit(self.text_surface, (x_position, y_position))
 
     def clicked(self, mouse_xy):
+        """Checks to see if the button was clicked."""
         yes_or_no = False
         p1 = self.position
         p2 = (p1[0] + self.width, p1[1] + self.height)
-        yes_or_no = (self.active and p1[0] <= mouse_xy[0] <= p2[0] and
-                     p1[1] <= mouse_xy[1] <= p2[1])
+        yes_or_no = (self.active and p1[0] <= mouse_xy[0] <= p2[0] and p1[1] <= mouse_xy[1] <= p2[1])
         return yes_or_no
 
     def active(self):
@@ -82,12 +79,14 @@ class SimpleButton:
 
     def display_highlighted(self):
         """Displays the highlighted version of the button."""
-        self.button_bg(self.highlight_color)
-        self.button_text()
-        self.surface.blit(self.button_surface, self.position)
+        if self.active and self.highlighted:
+            self.button_bg(self.highlight_color)
+            self.button_text()
+            self.surface.blit(self.button_surface, self.position)
 
     def display_button(self):
         """Displays the button."""
-        self.button_bg(self.button_color)
-        self.button_text()
-        self.surface.blit(self.button_surface, self.position)
+        if self.active and not self.highlighted:
+            self.button_bg(self.button_color)
+            self.button_text()
+            self.surface.blit(self.button_surface, self.position)

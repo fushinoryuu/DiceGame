@@ -99,6 +99,14 @@ class GraphicDie:
         self.ACTIVE = False
         return self.ACTIVE
 
+    def clicked(self, mouse_xy):
+        yes_or_no = False
+        p1 = self.POS
+        p2 = (self.ACTIVE and p1[0] + self.SIZE, p1[1] + self.SIZE)
+        yes_or_no = (p1[0] <= mouse_xy[0] <= p2[0] and
+                     p1[1] <= mouse_xy[1] <= p2[1])
+        return yes_or_no
+
     def set_random_value(self):
         """Returns a random value between 1-6."""
         self.VALUE = randint(1, 6)

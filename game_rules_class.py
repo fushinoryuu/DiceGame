@@ -13,7 +13,7 @@ class GameRules:
 
         counts = [0] * 7
         for i in dice_list:
-            counts[i.VALUE] = counts[i.VALUE] + 1
+            counts[i.VALUE] += 1
 
         #score the hand
         if 7 in counts:
