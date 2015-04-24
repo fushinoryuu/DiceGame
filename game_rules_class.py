@@ -15,17 +15,22 @@ class GameRules:
         for i in dice_list:
             counts[i.VALUE] = counts[i.VALUE] + 1
 
-        if 5 in counts:
+        #score the hand
+        if 7 in counts:
+                return "Seven of a Kind", 40
+        elif 6 in counts:
+            return "Six of a Kind", 35
+        elif 5 in counts:
             return "Five of a Kind", 30
+        elif (4 in counts) and (3 in counts):
+            return "Full House", 25
         elif 4 in counts:
-            return "Four of a Kind", 25
-        elif (3 in counts) and (2 in counts):
-            return "Full House", 15
-        elif 3 in counts:
-            return "Three of a Kind", 10
-        elif not (2 in counts) and (counts[1] == 0 or counts[6] == 0):
-            return "Straight", 20
-        elif counts.count(2) == 2:
+            return "Four of a Kind", 20
+        elif counts.count(2) == 3:
+            return "Flush", 15
+        elif not (3 in counts) and (counts[1] == 0 or counts[6] == 0):
+            return "Straight", 10
+        elif counts.count(3) == 2:
             return "Two Pair", 5
         else:
             return "No Winnings", 0
