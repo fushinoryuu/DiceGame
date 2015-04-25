@@ -53,12 +53,19 @@ def play_again():
     game_interface.b2.active = True
     game_interface.score_active = False
 
+def new_game():
+    game_interface.b6.highlighted = False
+    game_interface.reset_game()
+
 def main():
     """This function will run the die game."""
     game_interface.start_setup()
+    game_state = game_interface.check_for_lose()
     while True:
         for event in pygame.event.get():
             game_interface.instruction_active = True
+            game_interface.b6.active = True
+            game_interface.b7.active = True
             # You can quit by closing the window.
             if event.type == QUIT:
                 pygame.quit()
@@ -82,6 +89,10 @@ def main():
                     game_interface.b4.highlighted = True
                 elif game_interface.b5.clicked(mouse_xy):
                     game_interface.b5.highlighted = True
+                elif game_interface.b6.clicked(mouse_xy):
+                    game_interface.b6.highlighted = True
+                elif game_interface.b7.clicked(mouse_xy):
+                    game_interface.b7.highlighted = True
 
             if event.type == MOUSEBUTTONUP:
                 if game_interface.b1.clicked(mouse_xy):
@@ -95,7 +106,7 @@ def main():
                 elif game_interface.b5.clicked(mouse_xy):
                     play_again()
                 elif game_interface.b6.clicked(mouse_xy):
-                    main()
+                    new_game()
                 elif game_interface.b7.clicked(mouse_xy):
                     pygame.quit()
                     sys.exit()

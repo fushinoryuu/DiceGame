@@ -20,6 +20,7 @@ class GraphicDieInterface:
         self.display_height = 480
 
         self.background_image = pygame.image.load('background.png')
+        self.lose_image = pygame.image.load('youlose.png')
 
         self.display_surface = pygame.display.set_mode((self.display_width, self.display_height), 0, 32)
         pygame.display.set_caption('Dice Game')
@@ -58,9 +59,11 @@ class GraphicDieInterface:
         self.b2 = SimpleButton(b_width, b_height, self.orange, self.grey, "Second Roll", self.display_surface, b_position)
         self.b3 = SimpleButton(b_width, b_height, self.orange, self.grey, "Third Roll", self.display_surface, b_position)
         self.b4 = SimpleButton(b_width, b_height, self.orange, self.grey, "Last Roll", self.display_surface, b_position)
-        self.b5 = SimpleButton(b_width, b_height, self.orange, self.grey, "Play Again", self.display_surface, b_position)
-        self.b6 = SimpleButton(b_width, b_height, self.orange, self.grey, "New Game", self.display_surface, b_position)
-        self.b7 = SimpleButton(b_width, b_height, self.orange, self.grey, "Quit", self.display_surface, b_position)
+        self.b5 = SimpleButton(b_width, b_height, self.orange, self.grey, "Next Round", self.display_surface, b_position)
+        self.b6 = SimpleButton(b_width, b_height, self.orange, self.grey, "New Game", self.display_surface,
+                               (b_position[0] - 150, b_position[1]))
+        self.b7 = SimpleButton(b_width, b_height, self.orange, self.grey, "Quit", self.display_surface,
+                               (b_position[0] + 150, b_position[1]))
         self.buttons_list = [self.b1, self.b2, self.b3, self.b4, self.b5, self.b6, self.b7]
 
         self.game_font = pygame.font.SysFont("Magneto", 100)
@@ -110,6 +113,8 @@ class GraphicDieInterface:
         """This function starts the set up for the game setting up the buttons and dice."""
         self.all_buttons_inactive()
         self.b1.active = True
+        self.b6.active = True
+        self.b7.active = True
         self.all_dice_inactive()
         self.all_dice_roll()
 
@@ -121,6 +126,10 @@ class GraphicDieInterface:
     def change_points(self, change):
         """Helper function to change the score."""
         self.game_rules.points += change
+
+    def reset_points(self, change):
+        """Helper function to reset the points to 100."""
+        self.game_rules.points = change
 
     def display_score(self):
         """Displays the score that player has for the current set of dice."""
@@ -177,3 +186,17 @@ class GraphicDieInterface:
         self.display_text()
         self.display_all_die()
         self.display_all_buttons()
+
+    def reset_game(self):
+        """Resets everything for a new game."""
+        self.start_setup()
+        self.reset_points(100)
+        self.display_interface()
+        for i in self.die_object_list:
+            i.set_value(1)
+
+    def check_for_lose(self):
+        if self.game_rules.points <= 0:
+            return True
+        else:
+            return False

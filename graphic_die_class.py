@@ -100,6 +100,10 @@ class GraphicDie:
         self.ACTIVE = False
         return self.ACTIVE
 
+    def set_value(self, value):
+        """Helper function that allows to set a specific value instead of a random value."""
+        self.VALUE = value
+
     def clicked(self, mouse_xy):
         yes_or_no = False
         p1 = self.POS

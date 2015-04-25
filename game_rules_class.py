@@ -27,10 +27,10 @@ class GameRules:
         elif 4 in counts:
             return "Four of a Kind", 20
         elif counts.count(2) == 3:
-            return "Flush", 15
+            return "Three 2x2 Pairs", 15
         elif not (3 in counts) and (counts[1] == 0 or counts[6] == 0):
             return "Straight", 10
         elif counts.count(3) == 2:
-            return "Two Pair", 5
+            return "Two 3x3 Pairs", 5
         else:
             return "No Winnings", 0
