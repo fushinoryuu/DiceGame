@@ -8,16 +8,18 @@ from graphic_die_class import GraphicDie
 from button_class import SimpleButton
 from game_rules_class import GameRules
 
+pygame.init()
+
 
 class GraphicDieInterface:
-
+    """This class defines the interface for the game."""
     def __init__(self):
-        pygame.init()
-
         self.number_of_dice = 7
 
         self.display_width = 640
         self.display_height = 480
+
+        self.background_image = pygame.image.load('background.png')
 
         self.display_surface = pygame.display.set_mode((self.display_width, self.display_height), 0, 32)
         pygame.display.set_caption('Dice Game')
@@ -32,7 +34,6 @@ class GraphicDieInterface:
         self.grey = (50, 50, 50)
         self.yellow = (192, 150, 24)
         self.background_color = (0, 147, 134)
-        self.display_surface.fill(self.background_color)
 
         self.die_size = self.display_width//(self.number_of_dice + 3)
         self.die_gap = self.die_size//(self.number_of_dice + 1)
@@ -58,31 +59,39 @@ class GraphicDieInterface:
         self.b3 = SimpleButton(b_width, b_height, self.orange, self.grey, "Third Roll", self.display_surface, b_position)
         self.b4 = SimpleButton(b_width, b_height, self.orange, self.grey, "Last Roll", self.display_surface, b_position)
         self.b5 = SimpleButton(b_width, b_height, self.orange, self.grey, "Play Again", self.display_surface, b_position)
-        self.buttons_list = [self.b1, self.b2, self.b3, self.b4, self.b5]
+        self.b6 = SimpleButton(b_width, b_height, self.orange, self.grey, "New Game", self.display_surface, b_position)
+        self.b7 = SimpleButton(b_width, b_height, self.orange, self.grey, "Quit", self.display_surface, b_position)
+        self.buttons_list = [self.b1, self.b2, self.b3, self.b4, self.b5, self.b6, self.b7]
 
-        self.game_font = pygame.font.SysFont("Broadway", 80)
+        self.game_font = pygame.font.SysFont("Magneto", 100)
         self.instructions_text = "Click on Dice -- Red to Roll, White to Hold"
         self.title_surface = self.game_font.render("Dice Game", True, self.dark_turquoise, None)
-        self.instruction_surface = self.game_font.render(self.instructions_text, True, self.lite_turquoise, None)
-        self.instruction_surface = pygame.transform.scale(self.instruction_surface, (self.display_width - (self.display_width//5), self.display_width//20))
+        self.instruction_surface = self.game_font.render(self.instructions_text, True, self.white, None)
+        self.instruction_surface = pygame.transform.scale(self.instruction_surface, (self.display_width -
+                                                                                     (self.display_width//5),
+                                                                                     self.display_width//20))
 
         self.game_rules = GameRules()
         self.score_active = False
         self.instruction_active = False
 
     def all_dice_active(self):
+        """Sets all the dice to active status."""
         for i in self.die_object_list:
             i.ACTIVE = True
 
     def all_dice_inactive(self):
+        """Makes all the dice in the list inactive."""
         for i in self.die_object_list:
             i.ACTIVE = False
 
     def all_dice_hold(self):
+        """Holds all the dice on the list."""
         for i in self.die_object_list:
             i.HOLD = True
 
     def all_dice_roll(self):
+        """Rolls all the dice in the list."""
         for i in self.die_object_list:
             i.HOLD = False
 
@@ -95,22 +104,26 @@ class GraphicDieInterface:
     def all_buttons_inactive(self):
         """Make all buttons in list inactive."""
         for i in self.buttons_list:
-            i.ACTIVE = False
+            i.active = False
 
     def start_setup(self):
+        """This function starts the set up for the game setting up the buttons and dice."""
         self.all_buttons_inactive()
-        self.b1.ACTIVE = True
+        self.b1.active = True
         self.all_dice_inactive()
         self.all_dice_roll()
 
     def add_points(self):
+        """Adds up the points from your final roll to the players current score."""
         self.score_tuple = self.game_rules.score_dice(self.die_object_list)
         self.game_rules.points += self.score_tuple[1]
 
     def change_points(self, change):
+        """Helper function to change the score."""
         self.game_rules.points += change
 
     def display_score(self):
+        """Displays the score that player has for the current set of dice."""
         if self.score_active:
             score_string = self.score_tuple[0] + ', ' + 'You win' + str(self.score_tuple[1]) + ' Points'
             self.score_surface = self.game_font.render(score_string, True, self.yellow, None)
@@ -119,9 +132,10 @@ class GraphicDieInterface:
             w, h = self.score_surface.get_size()
             self.score_x = (self.display_width - w)//2
             self.score_y = int(self.die_y + self.die_size * 1.8)
-            self.display_surface.blit(self.score_surface, (self.score_x, self.score_y))
+            self.display_surface.blit(self.score_surface, (self.score_x, self.score_y + 20))
 
     def display_points(self):
+        """Displays the points players current total score."""
         point_string = "Player's Points: " + str(self.game_rules.points)
         points_surface = self.game_font.render(point_string, True, self.rust, None)
         points_surface = pygame.transform.scale(points_surface, (self.display_width - (self.display_width//3),
@@ -136,12 +150,12 @@ class GraphicDieInterface:
         w, h = self.title_surface.get_size()
         text_x = (self.display_width - w)//2
         text_y = self.display_height//20
-        self.display_surface.blit(self.title_surface, (text_x, text_y))
+        self.display_surface.blit(self.title_surface, (text_x, text_y - 10))
         if self.instruction_active:
             temp_w, temp_h = self.instruction_surface.get_size()
             temp_x = (self.display_width - temp_w)//2
             temp_y = int(self.die_y - temp_h * 1.15)
-            self.display_surface.blit(self.instruction_surface, (temp_x, temp_y))
+            self.display_surface.blit(self.instruction_surface, (temp_x, temp_y + 250))
 
     def display_all_die(self):
         """Displays all die."""
@@ -151,60 +165,15 @@ class GraphicDieInterface:
     def display_all_buttons(self):
         """Display all button in list that are active."""
         for x in self.buttons_list:
-            if x.ACTIVE:
+            if x.active:
                 x.display_button()
                 x.display_highlighted()
 
     def display_interface(self):
         """Display all methods that are display related."""
-        self.display_surface.fill(self.background_color)
+        self.display_surface.blit(self.background_image, (0, 0))
         self.display_points()
         self.display_score()
         self.display_text()
         self.display_all_die()
         self.display_all_buttons()
-
-    def fill_gradient(self, surface, color, gradient, rect=None, vertical=True, forward=True):
-        """fill a surface with a gradient pattern
-        Parameters:
-        color -> starting color
-        gradient -> final color
-        rect -> area to fill; default is surface's rect
-        vertical -> True=vertical; False=horizontal
-        forward -> True=forward; False=reverse
-
-        Pygame recipe: http://www.pygame.org/wiki/GradientCode"""
-        if rect is None:
-            rect = surface.get_rect()
-        x1, x2 = rect.left, rect.right
-        y1, y2 = rect.top, rect.bottom
-        if vertical:
-            h = y2-y1
-        else:
-            h = x2-x1
-        if forward:
-            a, b = color, gradient
-        else:
-            b, a = color, gradient
-        rate = (
-            float(b[0] - a[0])/h,
-            float(b[1] - a[1])/h,
-            float(b[2] - a[2])/h
-        )
-        fn_line = pygame.draw.line
-        if vertical:
-            for line in range(y1,y2):
-                color = (
-                    min(max(a[0] + (rate[0] * (line - y1)), 0), 255),
-                    min(max(a[1] + (rate[1] * (line - y1)), 0), 255),
-                    min(max(a[2] + (rate[2] * (line - y1)), 0), 255)
-                )
-                fn_line(surface, color, (x1, line), (x2, line))
-        else:
-            for col in range(x1,x2):
-                color = (
-                    min(max(a[0] + (rate[0] * (col - x1)), 0), 255),
-                    min(max(a[1] + (rate[1] * (col - x1)), 0), 255),
-                    min(max(a[2] + (rate[2] * (col - x1)), 0), 255)
-                )
-                fn_line(surface, color, (col,y1), (col, y2))

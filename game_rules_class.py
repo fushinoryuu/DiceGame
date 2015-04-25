@@ -10,7 +10,7 @@ class GameRules:
         self.points = 100
 
     def score_dice(self, dice_list):
-
+        """This function checks the players current hand and scores it according to the rules."""
         counts = [0] * 7
         for i in dice_list:
             counts[i.VALUE] += 1

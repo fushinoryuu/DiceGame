@@ -45,7 +45,7 @@ class SimpleButton:
         """Helper function to make text surface and blit on button_surface."""
 
         # Set up the Font Object and how to Change Fonts
-        button_font = pygame.font.SysFont("Sylfaen", self.t_height)
+        button_font = pygame.font.SysFont("Magneto", self.t_height)
         
         # Render a Text Surface
         self.text_surface = button_font.render(self.label, True, self.text_color, None)

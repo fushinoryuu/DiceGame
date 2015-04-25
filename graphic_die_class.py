@@ -63,12 +63,13 @@ class GraphicDie:
         """Helper function to make pips."""
         if self.HOLD:
             big_pip = pygame.draw.circle(self.DIESURF, self.DIEDOTSMED, point, self.RADIUS)
+            medium_pip = pygame.draw.circle(self.DIESURF, self.DIERED, point, (self.RADIUS - 2))
+            small_pip = pygame.draw.circle(self.DIESURF, self.PIPSBLK, point, math.ceil(self.RADIUS/2))
         else:
             big_pip = pygame.draw.circle(self.DIESURF, self.DIEDOTSLT, point, self.RADIUS)
-        # TODO make more pips
-        #medium_pip = pygame.draw.circle(self.DIESURF, self.DIERED, point, (self.RADIUS -2))
-        #small_pip = pygame.draw.circle(self.DIESURF, self.PIPSBLK, point, math.ceil(self.RADIUS/2))
-        return big_pip  # , pip_medium, pip_small
+            medium_pip = pygame.draw.circle(self.DIESURF, self.DIERED, point, (self.RADIUS - 2))
+            small_pip = pygame.draw.circle(self.DIESURF, self.PIPSBLK, point, math.ceil(self.RADIUS/2))
+        return big_pip, medium_pip, small_pip
 
     def switch_hold(self):
         """Switch the status of the die to the opposite of the current status."""
